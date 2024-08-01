@@ -23,13 +23,21 @@ def main():
     et.utils.config_logging(args)
 
     client = a121.Client.open(**a121.get_client_args(args))
+    # DetectorConfig(start_m=0.0, end_m=2.0, max_step_length=12, max_profile=<Profile.PROFILE_1: 1>, close_range_leakage_cancellation=False, signal_quality=15.0, threshold_method=<ThresholdMethod.RECORDED: 4>, peaksorting_method=<PeakSortingMethod.STRONGEST: 2>, reflector_shape=<ReflectorShape.GENERIC: 4>, num_frames_in_recorded_threshold=100, fixed_threshold_value=100.0, fixed_strength_threshold_value=0.0, threshold_sensitivity=0.5, update_rate=50.0)
+    # {"start_m": 0.05, "end_m": 0.15, "max_step_length": 1, "max_profile": "PROFILE_1", "close_range_leakage_cancellation": false, "signal_quality": 24.2, "threshold_method": "FIXED_STRENGTH", "peaksorting_method": "CLOSEST", "reflector_shape": "GENERIC", "num_frames_in_recorded_threshold": 100, "fixed_threshold_value": 500.0, "fixed_strength_threshold_value": -30.0, "threshold_sensitivity": 0.5, "update_rate": 50.0}
     detector_config = DetectorConfig(
-        start_m=0.0,
-        end_m=2.0,
+        start_m=0.05,
+        end_m=1.0,
         max_profile=a121.Profile.PROFILE_1,
-        max_step_length=12,
-        threshold_method=ThresholdMethod.RECORDED,
+        max_step_length=1,
+        close_range_leakage_cancellation=False,
+        signal_quality=24.2,
+        threshold_method=a121.algo.distance.ThresholdMethod.FIXED_STRENGTH,
+        peaksorting_method=a121.algo.distance.PeakSortingMethod.CLOSEST,
+        fixed_threshold_value=500.0,
+        fixed_strength_threshold_value=-30.0,
     )
+
     detector = Detector(client=client, sensor_ids=[SENSOR_ID], detector_config=detector_config)
 
     detector.calibrate_detector()
